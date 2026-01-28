@@ -61,13 +61,13 @@ public class SimulacionService {
                         "No existe el dron con id: " + id));
     }
 
-    public List<Dron> delete() {
+    public List<Dron> deleteall() {
         repo.deleteAll();
         return repo.findAll();
     }
 
     @Transactional
-    public Dron delete(Long id) {
+    public Dron deleteById(Long id) {
         Dron dronEliminar = findDronById(id);
         dronEliminar.getOrdenes().size();
         repo.delete(dronEliminar);

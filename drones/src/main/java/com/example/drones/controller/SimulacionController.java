@@ -47,12 +47,12 @@ public class SimulacionController {
 
     @DeleteMapping("/delete")
     public List<Dron> delete(){
-        return simu.delete();
+        return simu.deleteall();
     }
 
     @DeleteMapping("/delete/{id}")
     public Dron deletebyId(@PathVariable Long id){
-        return simu.delete(id);
+        return simu.deleteById(id);
     }
 
     @PatchMapping("/edit/{id}")
@@ -66,7 +66,7 @@ public class SimulacionController {
         return simu.editbyId(id, cord.x(),cord.y());
     }
 
-    @GetMapping("/find")
+    @GetMapping("/find/cord")
     public Dron findbyCord(@RequestParam int x, @RequestParam int y){
         return simu.findByCord(x,y);
     }
