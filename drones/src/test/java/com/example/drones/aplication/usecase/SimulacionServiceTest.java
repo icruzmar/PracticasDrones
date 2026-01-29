@@ -1,10 +1,13 @@
 package com.example.drones.aplication.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,8 +26,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.drones.application.usecase.SimulacionService;
 import com.example.drones.domain.model.Dron;
+import com.example.drones.domain.model.Matriz;
+import com.example.drones.domain.model.ValorOrden;
 import com.example.drones.domain.model.ValorOrientacion;
 import com.example.drones.domain.port.DronRepository;
+import com.example.drones.dto.DronRequest;
 import com.example.drones.service.DronService;
 
 @ExtendWith(MockitoExtension.class)
@@ -193,6 +200,26 @@ class SimulacionServiceTest {
     }
 
     @Test
+    void deberia_devolver_dron_original_id() {
+        Dron original = new Dron();
+        original.setId(1L);
+        original.setX(5);
+        original.setY(5);
+
+        Dron nuevo = new Dron();
+        nuevo.setX(10);
+        nuevo.setY(1);
+
+        when(repo.findById(1L)).thenReturn(Optional.of(original));
+        when(repo.save(any(Dron.class))).thenAnswer(a -> a.getArgument(0));
+
+        Dron resultado = service.editbyId(1L, 10, 1);
+
+        assertEquals(10, resultado.getX());
+        assertEquals(1, resultado.getY());
+    }
+
+    @Test
     void deberia_lanzar_404_cuando_se_intenta_editar_dron_inexistente() {
         when(repo.findById(99L)).thenReturn(Optional.empty());
 
@@ -227,4 +254,58 @@ class SimulacionServiceTest {
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 
+    // Test Ejecutar Simulacion
+    @Test
+    void deberia_devolver_una_lista_dronrequest() {
+        Matriz matriz = new Matriz();
+        matriz.setMaxX(10);
+        matriz.setMaxY(10);
+
+        Dron dron = new Dron();
+        dron.setId(1L);
+        dron.setOrientacion(ValorOrientacion.N);
+        List<ValorOrden> listaOrdenes = new ArrayList<>();
+        listaOrdenes.add(ValorOrden.MOVE_FORWARD);
+        dron.setOrdenes(listaOrdenes);
+
+        List<Dron> list = new ArrayList<>();
+        list.add(dron);
+
+        when(repo.save(any(Dron.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        List<DronRequest> resultado = service.ejecutarSimulacion(matriz, list);
+
+        assertEquals(1, resultado.size());
+        assertEquals(1L, resultado.get(0).getId());
+        assertNull(dron.getId());
+        assertEquals(0, resultado.get(0).getX());
+        assertEquals(1, resultado.get(0).getY());
+
+        verify(repo, times(1)).save(any(Dron.class));
+    }
+
+    @Test
+    void deberia_devolver_una_lista_dronrequest_vacia() {
+        Matriz matriz = new Matriz();
+        matriz.setMaxX(10);
+        matriz.setMaxY(10);
+
+        Dron dron = new Dron();
+        dron.setId(1L);
+        dron.setX(15);
+        dron.setY(15);
+        dron.setOrientacion(ValorOrientacion.N);
+        List<ValorOrden> listaOrdenes = new ArrayList<>();
+        listaOrdenes.add(ValorOrden.MOVE_FORWARD);
+        dron.setOrdenes(listaOrdenes);
+
+        List<Dron> list = new ArrayList<>();
+        list.add(dron);
+
+        List<DronRequest> resultado = service.ejecutarSimulacion(matriz, list);
+
+        assertEquals(0, resultado.size());
+
+        verify(repo, times(0)).save(any(Dron.class));
+    }
 }

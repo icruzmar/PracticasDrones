@@ -12,17 +12,17 @@ public class Dron {
     private ValorOrientacion orientacion;
     private List<ValorOrden> ordenes;
 
-    public void ejecutarOrdenes(Matriz mapa) {
+    public void ejecutarOrdenes() {
         for (ValorOrden orden : ordenes) {
-            ejecutarOrden(orden, mapa);
+            ejecutarOrden(orden);
         }
     }
 
-    public void ejecutarOrden(ValorOrden orden, Matriz mapa) {
+    public void ejecutarOrden(ValorOrden orden) {
         switch (orden) {
             case TURN_LEFT -> turnLeft();
             case TURN_RIGHT -> turnRight();
-            case MOVE_FORWARD -> moveForward(mapa);
+            case MOVE_FORWARD -> moveForward();
         }
     }
 
@@ -32,7 +32,6 @@ public class Dron {
             case E -> orientacion = ValorOrientacion.N;
             case O -> orientacion = ValorOrientacion.S;
             case S -> orientacion = ValorOrientacion.E;
-            default -> throw new IllegalStateException("Orientacion no reconocida");
         }
     }
 
@@ -45,7 +44,7 @@ public class Dron {
         }
     }
 
-    public void moveForward(Matriz mapa) {
+    public void moveForward() {
         int nuevoX = x;
         int nuevoY = y;
 
@@ -54,6 +53,7 @@ public class Dron {
             case S -> nuevoY--;
             case E -> nuevoX++;
             case O -> nuevoX--;
+           
         }
 
         x = nuevoX;

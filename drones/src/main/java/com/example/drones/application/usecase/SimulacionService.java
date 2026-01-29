@@ -28,7 +28,7 @@ public class SimulacionService {
         List<DronRequest> resultado = new ArrayList<>();
         ds.cargarDronesbyDB(matriz);
         for (Dron dron : drones) {
-            dron.ejecutarOrdenes(matriz);
+            dron.ejecutarOrdenes();
 
             if (matriz.posicionValida(dron.getId(), dron.getX(), dron.getY())) {
                 matriz.registrarPosicion(dron.getId(), dron.getX(), dron.getY());
