@@ -32,6 +32,7 @@ public class Dron {
             case E -> orientacion = ValorOrientacion.N;
             case O -> orientacion = ValorOrientacion.S;
             case S -> orientacion = ValorOrientacion.E;
+            default -> throw new IllegalStateException("Orientacion no reconocida");
         }
     }
 
