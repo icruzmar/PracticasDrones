@@ -2,12 +2,19 @@ package com.example.drones.domain.model;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class Dron {
 
+    @Schema(example = "1", description = "Id unico autogenerado")
     private Long id;
+    @Schema(example = "Nombre",description = "Es el nombre proporcionado al dron")
     private String nombre;
+    @Schema(example = "Modelo",description = "Es el modelo proporcionado al dron")
     private String modelo;
+    @Schema(example = "5",description = "Es la Cordenada de la posicion X")
     private int x;
+    @Schema(example = "5",description = "Es la cordenada de la posicion Y")
     private int y;
     private ValorOrientacion orientacion;
     private List<ValorOrden> ordenes;
