@@ -98,14 +98,12 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.11</version>
 				<executions>
-					<!-- Paso 1: enganchar JaCoCo antes de los tests -->
 					<execution>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
 					</execution>
 
-					<!-- Paso 2: generar informe y validar cobertura -->
 					<execution>
 						<id>report</id>
 						<phase>verify</phase>

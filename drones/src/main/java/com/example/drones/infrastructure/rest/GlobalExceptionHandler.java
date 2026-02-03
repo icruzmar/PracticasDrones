@@ -10,7 +10,6 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Captura errores específicos (ej. cuando no encuentras un Dron)
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntime(RuntimeException ex) {
         Map<String, Object> body = new HashMap<>();
@@ -20,11 +19,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    // Captura cualquier otro error inesperado
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGlobal(Exception ex) {
         Map<String, Object> body = new HashMap<>();
-        
+
         body.put("mensaje", "Ocurrió un error inesperado en el servidor");
         
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
