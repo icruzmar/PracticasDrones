@@ -1,4 +1,4 @@
-#  Simulador de Drones (Prácticas)
+#  Simulador de Drones
 
 Este proyecto es una API REST desarrollada con **Spring Boot** para gestionar y simular el movimiento de una flota de drones sobre un tablero o matriz. El sistema permite procesar rutas, validar movimientos para evitar colisiones y mantener un registro persistente de cada dron.
 
