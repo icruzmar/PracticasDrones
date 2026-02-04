@@ -3,7 +3,11 @@ package com.example.drones.infrastructure.persistence.mapper;
 import com.example.drones.domain.model.Dron;
 import com.example.drones.infrastructure.persistence.entity.DronEntity;
 
-public class DronMapper {
+public final class DronMapper {
+
+    private DronMapper() {
+        throw new UnsupportedOperationException("Clase de utilidad, no instanciar");
+    }
 
     public static Dron toDomain(DronEntity entity) {
         if (entity == null) return null;
@@ -20,7 +24,7 @@ public class DronMapper {
         return dron;
     }
 
-    public static DronEntity toEntity(Dron domain) {
+    public static  DronEntity toEntity(Dron domain) {
         if (domain == null) return null;
 
         DronEntity entity = new DronEntity();

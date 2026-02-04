@@ -2,15 +2,22 @@ package com.example.drones.dto;
 
 import com.example.drones.domain.model.ValorOrientacion;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class DronRequest {
    
     private Long id;
+    @NotBlank(message = "El nombre no puede estar vacio")
     private String nombre;
     private String modelo;
+    @NotBlank(message = "La cordenada X es obligatoria")
+    @Min(value = 0 , message = "La cordebada X debe ser 0 o mayor" )
     private int x;
+    @NotBlank(message = "La cordenada Y es obligatoria")
+    @Min(value = 0 , message = "La cordebada Y debe ser 0 o mayor" )
     private int y;
     private ValorOrientacion orientacion;
 

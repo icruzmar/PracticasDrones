@@ -2,6 +2,7 @@ package com.example.drones.application.usecase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ public class SimulacionService {
 
     private final DronRepository repo;
     private final DronService ds;
+
+    Logger logger = Logger.getLogger(SimulacionService.class.getName());
 
     public SimulacionService(DronRepository repo, DronService ds) {
         this.repo = repo;
@@ -44,7 +47,7 @@ public class SimulacionService {
                 dron.setId(null);
                 repo.save(dron);
             } else {
-                System.out.println("No se ha podido guardar el dron: Erro al coincidir el Id o la Posicion");
+                logger.info("No se ha podido guardar el dron: Erro al coincidir el Id o la Posicion");
             }
         }
         return resultado;

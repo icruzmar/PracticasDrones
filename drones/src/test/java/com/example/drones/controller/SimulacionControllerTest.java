@@ -1,6 +1,5 @@
 package com.example.drones.controller;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -23,7 +22,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -34,7 +32,6 @@ import com.example.drones.dto.DronRequest;
 import com.example.drones.dto.SimulacionRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.servlet.ServletException;
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(SimulacionController.class)
@@ -42,7 +39,7 @@ class SimulacionControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    
     private SimulacionService simu;
 
     @Autowired
@@ -76,7 +73,8 @@ class SimulacionControllerTest {
     void find_by_id_exection() throws Exception {
         when(simu.findDronById(99L)).thenThrow(new RuntimeException());
 
-        assertThrows(ServletException.class, () -> mockMvc.perform(get("/api/find/99")));
+        mockMvc.perform(get("/api/find/99"))
+                .andExpect(status().isBadRequest());
     }
 
     // Test Find All
@@ -123,7 +121,8 @@ class SimulacionControllerTest {
     void find_by_cord_exection() throws Exception {
         when(simu.findByCord(99, 99)).thenThrow(new RuntimeException());
 
-        assertThrows(ServletException.class, () -> mockMvc.perform(get("/api/find/cord?x=99&y=99")));
+        mockMvc.perform(get("/api/find/cord?x=99&y=99"))
+                .andExpect(status().isBadRequest());
     }
 
     // Test OK
@@ -174,7 +173,8 @@ class SimulacionControllerTest {
     void delete_devuelve_dron_by_id_exection() throws Exception {
         when(simu.deleteById(99L)).thenThrow(new RuntimeException());
 
-        assertThrows(ServletException.class, () -> mockMvc.perform(delete("/api/delete/99")));
+        mockMvc.perform(delete("/api/delete/99"))
+                .andExpect(status().isBadRequest());
     }
 
     // Test Ejecutar
@@ -235,8 +235,10 @@ class SimulacionControllerTest {
     void edit_all_devuelve_dron_id_exeptio() throws Exception {
         when(simu.editall(eq(99L), any(Dron.class))).thenThrow(new RuntimeException());
 
-        assertThrows(ServletException.class, () -> mockMvc.perform(patch("/api/edit/99")
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(new Dron()))));
+        mockMvc.perform(patch("/api/edit/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new Dron())))
+                .andExpect(status().isBadRequest());
     }
 
     // Test Edit Cord By Id
@@ -258,9 +260,11 @@ class SimulacionControllerTest {
 
     @Test
     void edit_cord_devuelve_dron_id_exection() throws Exception {
-        when(simu.editbyId(eq(99L),anyInt(),anyInt())).thenThrow(new RuntimeException());
+        when(simu.editbyId(eq(99L), anyInt(), anyInt())).thenThrow(new RuntimeException());
 
-        assertThrows(ServletException.class, () -> mockMvc.perform(patch("/api/edit/cord/99")
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(new Dron()))));
+        mockMvc.perform(patch("/api/edit/cord/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new Dron())))
+                .andExpect(status().isBadRequest());
     }
 }
