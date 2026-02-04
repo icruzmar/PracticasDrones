@@ -30,3 +30,29 @@ cd PracticasDrones
 
 # Compilar y descargar dependencias
 mvn clean install
+```
+
+---
+
+### 3. Ejecutar los tests y ver la cobertura
+
+Para lanzar los tests unitarios y de integración, ejecuta:
+
+```bash
+mvn test
+```
+
+Para generar el informe de cobertura de código con Jacoco:
+
+```bash
+mvn verify
+```
+
+El informe HTML de cobertura se generará en:
+
+```
+target/site/jacoco/index.html
+```
+
+Ábrelo en tu navegador para ver el detalle de la cobertura de código.
+

@@ -1,7 +1,6 @@
 package com.example.drones.aplication.usecase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -164,6 +162,7 @@ class SimulacionServiceTest {
 
     }
 
+
     @Test
     void deberia_lanzar_404_cuando_se_intenta_editall_dron_inexistente() {
         Dron nuevo = new Dron();
@@ -206,15 +205,12 @@ class SimulacionServiceTest {
         original.setX(5);
         original.setY(5);
 
-        Dron nuevo = new Dron();
-        nuevo.setX(10);
-        nuevo.setY(1);
-
         when(repo.findById(1L)).thenReturn(Optional.of(original));
         when(repo.save(any(Dron.class))).thenAnswer(a -> a.getArgument(0));
 
         Dron resultado = service.editbyId(1L, 10, 1);
 
+        assertEquals(1L, resultado.getId());
         assertEquals(10, resultado.getX());
         assertEquals(1, resultado.getY());
     }

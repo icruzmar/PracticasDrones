@@ -19,6 +19,7 @@ import com.example.drones.dto.DronRequest;
 import com.example.drones.dto.SimulacionRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,7 +34,7 @@ public class SimulacionController {
 
     @Operation(summary = "Ejecucion de Drones en un Mapa", description = "Esta funcion guarda los drones en la base de datos y hace que las ordenes que tienen se ejecute y que su posicion cambien si es posible, si se mantiene en la misma en la que entro es que no ha sido posible el cambio de posicion por que esa posicion esta ocupada")
     @PostMapping("/ejecutar")
-    public SimulacionRequest ejecutar(@RequestBody SimulacionRequest request) {
+    public SimulacionRequest ejecutar(@Valid @RequestBody SimulacionRequest request) {
         log.info("Iniciando ejecución de simulacion");
         log.debug("Datos recibidos: MAtriz, Drones: []", request.getMatriz(), request.getDrones());
 
@@ -52,7 +53,7 @@ public class SimulacionController {
 
     @Operation(summary = "Busca un Dron especifico", description = "Esta funcion le proporcionas un Id y si es valido le entrega un dron con toda su informacion")
     @GetMapping("/find/{id}")
-    public Dron findbyId(@PathVariable Long id) {
+    public Dron findbyId(@Valid @PathVariable Long id) {
         log.info("Buscando dron con ID: {}", id);
         Dron dron = simu.findDronById(id);
 
@@ -72,7 +73,7 @@ public class SimulacionController {
 
     @Operation(summary = "Delete By ID", description = "Esta funcion se encarga de borrar un dron segun su Id")
     @DeleteMapping("/delete/{id}")
-    public Dron deletebyId(@PathVariable Long id) {
+    public Dron deletebyId(@Valid @PathVariable Long id) {
         log.info("Peticion para eliminar dron ID: {}", id);
         try {
             return simu.deleteById(id);
@@ -84,7 +85,7 @@ public class SimulacionController {
 
     @Operation(summary = "Edit All By ID", description = "Esta funcion edita un dron entero menos su id que no cambia")
     @PatchMapping("/edit/{id}")
-    public Dron editall(@PathVariable Long id, @RequestBody Dron dron) {
+    public Dron editall(@Valid @PathVariable Long id,@Valid @RequestBody Dron dron) {
         log.info("Peticion para editar dron ID: {}", id);
         try {
             return simu.editall(id, dron);
@@ -99,14 +100,14 @@ public class SimulacionController {
 
     @Operation(summary = "Edit Cord By ID", description = "Esta funcion edita las cordenadas de un dron y verifica si es posible su posicion ahi")
     @PatchMapping("/edit/cord/{id}")
-    public Dron editbyId(@PathVariable Long id, @RequestBody CordenadasDTO cord) {
+    public Dron editbyId(@Valid @PathVariable Long id,@Valid @RequestBody CordenadasDTO cord) {
         log.info("Actualizando coordenadas dron ID {}: Nueva pos [{}, {}]", id, cord.x(), cord.y());
         return simu.editbyId(id, cord.x(), cord.y());
     }
 
     @Operation(summary = "Find By Cord", description = "Esta funcion busca un dron dependiendo de las cordenadas que les pase")
     @GetMapping("/find/cord")
-    public Dron findbyCord(@RequestParam int x, @RequestParam int y) {
+    public Dron findbyCord(@Valid @RequestParam int x,@Valid @RequestParam int y) {
         log.info("Buscando Dron con las Cordenadad", x, y);
         Dron dron = simu.findByCord(x, y);
         if (dron == null) {
