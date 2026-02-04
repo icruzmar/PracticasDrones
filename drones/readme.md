@@ -25,6 +25,15 @@ Copia y pega los siguientes comandos en tu terminal:
 # Clonar el repositorio
 git clone [https://github.com/icruzmar/PracticasDrones.git](https://github.com/icruzmar/PracticasDrones.git)
 
+# Descarga el contnedor
+
+docker run -d \
+  --name mysql-drones \
+  -e MYSQL_ROOT_PASSWORD=1234 \
+  -p 3306:3306 \
+  -v mysql-data:/var/lib/mysql \
+  mysql:latest
+
 # Entrar en la carpeta del proyecto
 cd PracticasDrones
 
