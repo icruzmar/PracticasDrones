@@ -1,4 +1,4 @@
-package com.example.drones.service;
+package com.example.drones.domain.service;
 
 import java.util.ArrayList;
 import java.util.List;
