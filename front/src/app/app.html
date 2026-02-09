@@ -1,0 +1,62 @@
+<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh;">
+    <h1>Api de Drones</h1>
+
+
+    <select [(ngModel)]="opcionSelecionada">
+        <option value="">-- Elige algo --</option>
+        <option value="FIND_BY_ID">Buscar dron por Id</option>
+
+        <option value="FIND_ALL">Listar todos los drones</option>
+
+        <option value="FIND_BY_CORD">Buscar por cordenadas</option>
+
+        <option value="EDIT_BY_ID">Editar datos sobre el dron</option>
+
+        <option value="EDIT_CORD">Editar cordenadas del dron</option>
+
+        <option value="DELETE_BY_ID">Borrar un dron por su Id</option>
+
+        <option value="DELETE_ALL">Borrar todo los drones</option>
+    </select>
+
+    <p>Opcion seleccionada: {{opcionSelecionada}}.</p>
+
+    <div *ngIf="opcionSelecionada === 'FIND_BY_ID'">
+        <input type="number" [(ngModel)]="idDron" placeholder="Escribe el Id">
+    </div>
+
+    <div *ngIf="opcionSelecionada==='FIND_BY_CORD'">
+        <input type="number" [(ngModel)]="x" placeholder="X">
+        <input type="number" [(ngModel)]="y" placeholder="Y">
+    </div>
+
+    <div *ngIf="opcionSelecionada==='EDIT_BY_ID'">
+        
+    </div>
+
+
+    <button (click)="ejecutar()">Ejecutar</button>
+
+
+    <p *ngIf="error" style="color:red">{{ error }}</p>
+
+    <div *ngIf="dronEncontrado">
+        <h3>Dron encontrado</h3>
+        <p>ID: {{ dronEncontrado.id }}</p>
+        <p>Nombre: {{ dronEncontrado.nombre }}</p>
+        <p>Modelo: {{ dronEncontrado.modelo }}</p>
+        <p>X: {{ dronEncontrado.x }}</p>
+        <p>Y: {{ dronEncontrado.y }}</p>
+        <p>Orientación: {{ dronEncontrado.orientacion }}</p>
+    </div>
+
+
+    <div *ngIf="dronesLista?.length">
+        <h3>Lista de drones</h3>
+        <ul>
+            <li *ngFor="let d of dronesLista">
+                {{d.id}} - {{d.nombre}} - {{d.modelo}}
+            </li>
+        </ul>
+    </div>
+</div>
