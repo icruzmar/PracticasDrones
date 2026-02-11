@@ -18,8 +18,10 @@ import { Matriz } from './models/matriz.model';
 })
 export class App {
   title = 'PracticaDrones';
+  //Esta variable es para elegir funcion
   opcionSelecionada = '';
 
+  //Datos de Un Dron
   idDron: number | null = null;
   nombreDron: string | null = null;
   modeloDron: string | null = null;
@@ -33,9 +35,10 @@ export class App {
   opcionOrdenes: string = '';
   ordenes: ValorOrden[] = [];
 
+  //Datos de una Matriz
   maxX: number | null = null;
   maxY: number | null = null;
-
+  //Variable necesarias para las funciones
   seguridad: boolean = false;
   editable: Dron | null = null;
   dronRepuesto: Dron | null = null;
@@ -43,12 +46,14 @@ export class App {
   simulacion_entrada: Simulacion | null = null;
   matriz: Matriz | null = null;
 
+  //Variables de Salida
   dronEncontrado: Dron | null = null;
   simuEncontrado: Simulacion | null = null;
   dronesLista: Dron[] = [];
   error: string = '';
   constructor(private dronService: DronService, private cd: ChangeDetectorRef, private simuService: SimulacionService) { }
 
+  // Funcion que guarda una orden dentro de la lista requerida
   agregar_orden() {
     if (this.opcionOrdenes !== '') {
       if (this.opcionOrdenes === 'MOVE') {
@@ -62,6 +67,7 @@ export class App {
     }
 
   }
+  // Funcion que borra la ultima orden que haya
   borrar_orden() {
     if (this.ordenes.length > 0) {
       this.ordenes.pop();
@@ -69,7 +75,7 @@ export class App {
     this.cd.detectChanges();
   }
 
-
+  // Funcion ecargada de poner la orientacion segun lo seleccionado
   selectOrentacion(opcionOrientacion: string): ValorOrientacion {
     if (opcionOrientacion === 'N') return ValorOrientacion.N;
     if (opcionOrientacion === 'E') return ValorOrientacion.E;
@@ -77,7 +83,7 @@ export class App {
     if (opcionOrientacion === 'S') return ValorOrientacion.S;
     return ValorOrientacion.N;
   }
-
+  // Funcion que crea y agrega un dron a la lista requerida
   agregar_dron() {
     this.orientacion = this.selectOrentacion(this.opcionOrientacion);
     this.editable = {
@@ -92,6 +98,7 @@ export class App {
     this.dronesEntrada.push(this.editable);
     this.cd.detectChanges();
   }
+  // Borra el ultimo dron añadido
   borrar_dron() {
     this.dronesEntrada.pop();
     this.cd.detectChanges();
@@ -103,7 +110,7 @@ export class App {
     this.editable = null;
     this.dronesLista = [];
     this.ordenes = [];
-    this.simuEncontrado=null;
+    this.simuEncontrado = null;
 
     if (this.opcionSelecionada === '') {
       this.error = 'Seleciona una opcion'
@@ -130,6 +137,9 @@ export class App {
       this.dronService.listarTodos().subscribe(
         (drones) => {
           this.dronesLista = drones;
+          if (this.dronesLista.length == 0) {
+            this.error = 'No hay drones guardados'
+          }
           this.cd.detectChanges();
         },
         () => {
@@ -248,12 +258,21 @@ export class App {
         this.error = 'Necesitas acreditar el paso';
         return;
       }
-      this.dronService.deleteAll().subscribe(
+      this.dronService.listarTodos().subscribe(
         (drones) => {
           this.dronesLista = drones;
-          this.seguridad = false;
+          this.cd.detectChanges();
+          if (this.dronesLista.length == 0) {
+            this.error = 'No hay drones guardados'
+          }
+        },
+        () => {
+          this.error = 'No se pudo listar los drones';
           this.cd.detectChanges();
         }
+      );
+      this.dronService.deleteAll().subscribe(
+        () => this.seguridad=false
       );
     }
 
@@ -274,17 +293,17 @@ export class App {
 
       this.simulacion_entrada = {
         matriz: this.matriz,
-        dronesEntrada: this.dronesEntrada,
-        drones: []
+        drones: this.dronesEntrada
       };
 
       this.simuService.ejecutar(this.simulacion_entrada).subscribe(
         (sim) => {
-          this.simuEncontrado=sim;
+          this.simuEncontrado = sim;
+          this.dronesLista = this.simulacion_entrada!.drones;
           this.cd.detectChanges();
         },
         () => {
-          this.error= 'Error en la ejcucion del la simulacion';
+          this.error = 'Error en la ejcucion del la simulacion';
           this.cd.detectChanges();
         }
       )

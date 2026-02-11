@@ -1,9 +1,9 @@
 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh;">
     <h1>Api de Drones</h1>
 
-
     <select [(ngModel)]="opcionSelecionada">
         <option value="">-- Elige algo --</option>
+
         <option value="FIND_BY_ID">Buscar dron por Id</option>
 
         <option value="FIND_ALL">Listar todos los drones</option>
@@ -93,7 +93,6 @@
                 {{ d.id }} - {{ d.nombre }} - {{ d.modelo }}
             </li>
         </ul>
-        <p>{{dronesEntrada.length.toString()}}</p>
         <button (click)="agregar_dron()">Agregar Dron</button>
         <button (click)="borrar_dron()">Borrar Dron</button>
         <h4>ID</h4>
@@ -137,7 +136,8 @@
 
 
     <div *ngIf="dronEncontrado">
-        <h3>Dron encontrado</h3>
+        <h3 *ngIf="opcionSelecionada!=='DELETE_BY_ID'">Dron encontrado</h3>
+        <h3 *ngIf="opcionSelecionada==='DELETE_BY_ID'">Dron eliminado</h3>
         <p>ID: {{ dronEncontrado.id }}</p>
         <p>Nombre: {{ dronEncontrado.nombre }}</p>
         <p>Modelo: {{ dronEncontrado.modelo }}</p>
@@ -146,18 +146,16 @@
         <p>Orientación: {{ dronEncontrado.orientacion }}</p>
     </div>
 
-    <div *ngIf="opcionSelecionada === 'FIND_ALL'">
-        <h3>Lista de drones</h3>
+    <div *ngIf="dronesLista.length>=0 ">
+        <h3 *ngIf="opcionSelecionada==='FIND_ALL'">Lista de drones</h3>
+        <h3 *ngIf="opcionSelecionada==='DELETE_ALL'">Lista de drones borrados</h3>
 
-        <ul *ngIf="dronesLista.length > 0; else vacio">
+        <ul *ngIf="dronesLista.length > 0">
             <li *ngFor="let d of dronesLista">
                 {{ d.id }} - {{ d.nombre }} - {{ d.modelo }}
             </li>
         </ul>
 
-        <ng-template #vacio>
-            <p>No hay drones guardados</p>
-        </ng-template>
     </div>
 
 </div>
