@@ -17,6 +17,8 @@
         <option value="DELETE_BY_ID">Borrar un dron por su Id</option>
 
         <option value="DELETE_ALL">Borrar todo los drones</option>
+
+        <option value="EJECUCION">Ejecutar el programa</option>
     </select>
 
     <p>Opcion seleccionada: {{opcionSelecionada}}.</p>
@@ -31,14 +33,108 @@
     </div>
 
     <div *ngIf="opcionSelecionada==='EDIT_BY_ID'">
-        
+        <h4>ID</h4>
+        <input type="number" [(ngModel)]="idDron" placeholder="Escribe el Id">
+        <h4>Nombre</h4>
+        <input type="text" [(ngModel)]="nombreDron" placeholder="Escribe el nombre">
+        <h4>Modelo</h4>
+        <input type="text" [(ngModel)]="modeloDron" placeholder="Escribe el modelo">
+        <h4>Cordenadas</h4>
+        <input type="number" [(ngModel)]="x" placeholder="Escriba la cordenada X">
+        <input type="number" [(ngModel)]="y" placeholder="Escriba la cordenada Y">
+        <h4>Orientación</h4>
+        <select [(ngModel)]="opcionOrientacion">
+            <option value="N">Norte</option>
+            <option value="O">Oeste</option>
+            <option value="S">Sur</option>
+            <option value="E">Este</option>
+        </select>
+        <h4>Movimiento</h4>
+        <select [(ngModel)]="opcionOrdenes">
+            <option value="MOVE">Mover hacia delante</option>
+            <option value="LEFT">Girar a la izquierda</option>
+            <option value="RIGHT">Girar a la derecha</option>
+        </select>
+        <button (click)="agregar_orden()">Agregar</button>
+        <button (click)="borrar_orden()">Borrar</button>
+        <ul>
+            <p>Lista de Ordenes:</p>
+            <li *ngFor="let orden of ordenes">
+                {{ orden }}
+            </li>
+        </ul>
+
     </div>
+
+    <div *ngIf="opcionSelecionada === 'EDIT_CORD'">
+        <input type="number" [(ngModel)]="idDron" placeholder="Escribe el Id">
+        <input type="number" [(ngModel)]="x" placeholder="Escriba la cordenada X">
+        <input type="number" [(ngModel)]="y" placeholder="Escriba la cordenada Y">
+    </div>
+
+    <div *ngIf="opcionSelecionada === 'DELETE_BY_ID'">
+        <input type="number" [(ngModel)]="idDron" placeholder="Escriba el Id">
+    </div>
+
+    <div *ngIf="opcionSelecionada === 'DELETE_ALL'">
+        <label>
+            <input type="checkbox" [(ngModel)]="seguridad"> Seguro que quieres borrar todo los Drones
+        </label>
+    </div>
+
+    <div *ngIf="opcionSelecionada === 'EJECUCION'">
+        <h3>Matriz</h3>
+        <input type="number" [(ngModel)]="maxX" placeholder="Esciba un ancho">
+        <input type="number" [(ngModel)]="maxY" placeholder="Esciba un largo">
+
+        <h3>Drones</h3>
+        <ul *ngIf="dronesEntrada.length > 0">
+            <li *ngFor="let d of dronesEntrada">
+                {{ d.id }} - {{ d.nombre }} - {{ d.modelo }}
+            </li>
+        </ul>
+        <p>{{dronesEntrada.length.toString()}}</p>
+        <button (click)="agregar_dron()">Agregar Dron</button>
+        <button (click)="borrar_dron()">Borrar Dron</button>
+        <h4>ID</h4>
+        <input type="number" [(ngModel)]="idDron" placeholder="Escribe el Id">
+        <h4>Nombre</h4>
+        <input type="text" [(ngModel)]="nombreDron" placeholder="Escribe el nombre">
+        <h4>Modelo</h4>
+        <input type="text" [(ngModel)]="modeloDron" placeholder="Escribe el modelo">
+        <h4>Cordenadas</h4>
+        <input type="number" [(ngModel)]="x" placeholder="Escriba la cordenada X">
+        <input type="number" [(ngModel)]="y" placeholder="Escriba la cordenada Y">
+        <h4>Orientación</h4>
+        <select [(ngModel)]="opcionOrientacion">
+            <option value="N">Norte</option>
+            <option value="O">Oeste</option>
+            <option value="S">Sur</option>
+            <option value="E">Este</option>
+        </select>
+        <h4>Movimiento</h4>
+        <select [(ngModel)]="opcionOrdenes">
+            <option value="MOVE">Mover hacia delante</option>
+            <option value="LEFT">Girar a la izquierda</option>
+            <option value="RIGHT">Girar a la derecha</option>
+        </select>
+        <button (click)="agregar_orden()">Agregar</button>
+        <button (click)="borrar_orden()">Borrar</button>
+        <ul>
+            <p>Lista de Ordenes:</p>
+            <li *ngFor="let orden of ordenes">
+                {{ orden }}
+            </li>
+        </ul>
+
+    </div>
+
+    <p *ngIf="error" style="color:red">{{ error }}</p>
 
 
     <button (click)="ejecutar()">Ejecutar</button>
 
 
-    <p *ngIf="error" style="color:red">{{ error }}</p>
 
     <div *ngIf="dronEncontrado">
         <h3>Dron encontrado</h3>
@@ -50,13 +146,18 @@
         <p>Orientación: {{ dronEncontrado.orientacion }}</p>
     </div>
 
-
-    <div *ngIf="dronesLista?.length">
+    <div *ngIf="opcionSelecionada === 'FIND_ALL'">
         <h3>Lista de drones</h3>
-        <ul>
+
+        <ul *ngIf="dronesLista.length > 0; else vacio">
             <li *ngFor="let d of dronesLista">
-                {{d.id}} - {{d.nombre}} - {{d.modelo}}
+                {{ d.id }} - {{ d.nombre }} - {{ d.modelo }}
             </li>
         </ul>
+
+        <ng-template #vacio>
+            <p>No hay drones guardados</p>
+        </ng-template>
     </div>
+
 </div>
